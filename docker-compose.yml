@@ -1,0 +1,72 @@
+version: '3.4'
+  
+services:
+  mongoreplicasetwebapp:
+    hostname: mongoreplicasetwebapp
+    image: mongoreplicasetwebapp
+    build:
+      context: .
+      dockerfile: MongoReplicaSet.WebApp/Dockerfile 
+    networks:
+      - backend
+    ports:
+      - "8080:80"
+
+  mongo-rs-01:
+    hostname: mongo-rs-01
+    image: 'bitnami/mongodb:4.1'
+    environment:
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_REPLICA_SET_NAME=rs0
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+    restart: on-failure
+
+  mongo-rs-02:
+    hostname: mongo-rs-02
+    image: 'bitnami/mongodb:4.1'
+    depends_on:
+      - mongo-rs-01
+    environment:
+      - MONGODB_REPLICA_SET_MODE=secondary
+      - MONGODB_PRIMARY_HOST=mongo-rs-01
+      - MONGODB_REPLICA_SET_NAME=rs0
+    ports:
+      - "27018:27017"
+    networks:
+      - backend
+    restart: on-failure
+      
+  mongo-rs-03:
+    hostname: mongo-rs-03
+    image: 'bitnami/mongodb:4.1'
+    depends_on:
+      - mongo-rs-01
+    environment:
+      - MONGODB_REPLICA_SET_MODE=secondary
+      - MONGODB_PRIMARY_HOST=mongo-rs-01
+      - MONGODB_REPLICA_SET_NAME=rs0
+    ports:
+      - "27019:27017"
+    networks:
+      - backend
+    restart: on-failure
+
+  mongodb-arbiter:
+    hostname: mongodb-arbiter
+    image: 'bitnami/mongodb:4.1'
+    depends_on:
+      - mongo-rs-01
+    environment:
+      - MONGODB_REPLICA_SET_MODE=arbiter
+      - MONGODB_PRIMARY_HOST=mongo-rs-01
+      - MONGODB_REPLICA_SET_NAME=rs0
+    networks:
+      - backend
+    restart: on-failure
+
+networks:
+  backend:
+    driver: bridge

@@ -1,0 +1,33 @@
+﻿@page
+@model MongoReplicaSet.WebApp.Pages.TweetsModel
+@{
+    ViewData["Title"] = "Tweets";
+}
+
+<h2>Tweets</h2>
+
+<div asp-validation-summary="All"></div>
+<form method="POST">
+    <div>Message: <input asp-for="Tweet.Message" /></div>
+    <input type="submit" />
+</form>
+
+<hr/>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var tweet in Model.Tweets)
+    {
+        <tr>
+            <td>@tweet.Id</td>
+            <td>@tweet.Message</td>
+        </tr>
+    }
+    </tbody>
+</table>

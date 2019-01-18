@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoReplicaSet.WebApp", "MongoReplicaSet.WebApp\MongoReplicaSet.WebApp.csproj", "{03344CE6-CBA2-473F-ABC1-AF874C69BC34}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{26A9018C-8D8B-4C58-B7B0-3DB82A8F3A5C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03344CE6-CBA2-473F-ABC1-AF874C69BC34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03344CE6-CBA2-473F-ABC1-AF874C69BC34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03344CE6-CBA2-473F-ABC1-AF874C69BC34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03344CE6-CBA2-473F-ABC1-AF874C69BC34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26A9018C-8D8B-4C58-B7B0-3DB82A8F3A5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26A9018C-8D8B-4C58-B7B0-3DB82A8F3A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26A9018C-8D8B-4C58-B7B0-3DB82A8F3A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26A9018C-8D8B-4C58-B7B0-3DB82A8F3A5C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F55D9DAF-441F-4252-A963-0CA67D5BBD45}
+	EndGlobalSection
+EndGlobal
