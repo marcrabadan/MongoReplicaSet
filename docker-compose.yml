@@ -8,7 +8,8 @@ services:
       context: .
       dockerfile: MongoReplicaSet.WebApp/Dockerfile 
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.16.0.9
     ports:
       - "8080:80"
 
@@ -16,13 +17,19 @@ services:
     hostname: mongo-rs-01
     image: 'bitnami/mongodb:4.1'
     environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo-rs-01
       - MONGODB_REPLICA_SET_MODE=primary
-      - MONGODB_REPLICA_SET_NAME=rs0
+      - MONGODB_REPLICA_SET_NAME=rs0    
+      - MONGODB_ROOT_PASSWORD=pwd1920
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
     ports:
       - "27017:27017"
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.16.0.2
     restart: on-failure
+    volumes:
+      - 'mongodb_master_data:/bitnami'
 
   mongo-rs-02:
     hostname: mongo-rs-02
@@ -30,14 +37,20 @@ services:
     depends_on:
       - mongo-rs-01
     environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo-rs-02
       - MONGODB_REPLICA_SET_MODE=secondary
       - MONGODB_PRIMARY_HOST=mongo-rs-01
-      - MONGODB_REPLICA_SET_NAME=rs0
+      - MONGODB_REPLICA_SET_NAME=rs0     
+      - MONGODB_PRIMARY_ROOT_PASSWORD=pwd1920
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
     ports:
       - "27018:27017"
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.16.0.3
     restart: on-failure
+    volumes:
+      - 'mongodb_secondary2_data:/bitnami'
       
   mongo-rs-03:
     hostname: mongo-rs-03
@@ -45,14 +58,20 @@ services:
     depends_on:
       - mongo-rs-01
     environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongo-rs-03
       - MONGODB_REPLICA_SET_MODE=secondary
       - MONGODB_PRIMARY_HOST=mongo-rs-01
       - MONGODB_REPLICA_SET_NAME=rs0
+      - MONGODB_PRIMARY_ROOT_PASSWORD=pwd1920
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
     ports:
       - "27019:27017"
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.16.0.4
     restart: on-failure
+    volumes:
+      - 'mongodb_secondary3_data:/bitnami'
 
   mongodb-arbiter:
     hostname: mongodb-arbiter
@@ -60,13 +79,32 @@ services:
     depends_on:
       - mongo-rs-01
     environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-arbiter
       - MONGODB_REPLICA_SET_MODE=arbiter
       - MONGODB_PRIMARY_HOST=mongo-rs-01
-      - MONGODB_REPLICA_SET_NAME=rs0
+      - MONGODB_REPLICA_SET_NAME=rs0 
+      - MONGODB_PRIMARY_ROOT_PASSWORD=pwd1920
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
     networks:
-      - backend
+      backend:
+        ipv4_address: 172.16.0.5
     restart: on-failure
+    volumes:
+      - 'mongodb_arbiter_data:/bitnami'
 
 networks:
   backend:
     driver: bridge
+    ipam:
+     config:
+       - subnet: 172.16.0.0/16
+
+volumes:
+  mongodb_master_data:
+    driver: local
+  mongodb_secondary2_data:
+    driver: local
+  mongodb_secondary3_data:
+    driver: local
+  mongodb_arbiter_data:
+    driver: local

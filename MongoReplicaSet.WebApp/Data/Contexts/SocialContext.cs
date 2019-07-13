@@ -18,21 +18,25 @@ namespace MongoReplicaSet.WebApp.Data.Contexts
                 .WithCollection("tweets")
                 .WithDatabaseBehavior(c =>
                 {
-                    c.WithReadPreference(ReadPreference.Primary);
-                    c.WithReadConcern(ReadConcern.Majority);
+                    c.WithReadPreference(ReadPreference.SecondaryPreferred);
+                    c.WithReadConcern(ReadConcern.Local);
+                    c.WithWriteConcern(WriteConcern.WMajority);                    
+                })
+                .WithCollectionBehavior(c =>
+                {
+                    c.WithReadPreference(ReadPreference.SecondaryPreferred);
+                    c.WithReadConcern(ReadConcern.Local);
                     c.WithWriteConcern(WriteConcern.WMajority);
                 })
                 .WithTransactionBehavior(c =>
                 {
                     c.WithReadPreference(ReadPreference.Primary);
-                    c.WithReadConcern(ReadConcern.Majority);
+                    c.WithReadConcern(ReadConcern.Snapshot);
                     c.WithWriteConcern(WriteConcern.WMajority);
                 })
                 .WithSessionBehavior(c =>
                 {
                     c.WithReadPreference(ReadPreference.Primary);
-                    c.WithReadConcern(ReadConcern.Majority);
-                    c.WithWriteConcern(WriteConcern.WMajority);
                 });
         }
 

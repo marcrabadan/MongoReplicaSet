@@ -26,18 +26,32 @@ namespace MongoReplicaSet.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            string username = "root";
+            string password = "pwd1920";
+            string mongoDbAuthMechanism = "SCRAM-SHA-1";
+            MongoInternalIdentity internalIdentity =
+                      new MongoInternalIdentity("admin", username);
+            PasswordEvidence passwordEvidence = new PasswordEvidence(password);
+            MongoCredential mongoCredential =
+                 new MongoCredential(mongoDbAuthMechanism,
+                         internalIdentity, passwordEvidence);
+
             services.AddMongoDbContext<SocialContext>(c =>
             {
                 c.Configure(x =>
                 {
+                    x.Credential = mongoCredential;
                     x.Servers = new[]
                     {
-                        new MongoServerAddress("mongo-rs-01", 27017),
-                        new MongoServerAddress("mongo-rs-02", 27017),
-                        new MongoServerAddress("mongo-rs-03", 27017)
-                    };
+                      new MongoServerAddress("mongo-rs-01", 27017),
+                      new MongoServerAddress("mongo-rs-02", 27017),
+                      new MongoServerAddress("mongo-rs-03", 27017)
+                    };                    
                     x.ConnectionMode = ConnectionMode.ReplicaSet;
                     x.ReplicaSetName = "rs0";
+                    x.ReadPreference = ReadPreference.Nearest;
+                    x.ReadConcern = ReadConcern.Snapshot;
+                    x.WriteConcern = WriteConcern.WMajority;
                 });
             });
         }
